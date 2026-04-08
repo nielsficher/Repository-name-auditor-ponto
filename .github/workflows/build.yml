@@ -1,0 +1,32 @@
+name: Build EXE
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Baixar projeto
+      uses: actions/checkout@v4
+
+    - name: Instalar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Instalar dependências
+      run: |
+        pip install pyinstaller pandas openpyxl playwright
+        playwright install
+
+    - name: Gerar EXE
+      run: |
+        pyinstaller --onefile main.py
+
+    - name: Salvar EXE
+      uses: actions/upload-artifact@v4
+      with:
+        name: AuditorPontoASF
+        path: dist/main.exe
